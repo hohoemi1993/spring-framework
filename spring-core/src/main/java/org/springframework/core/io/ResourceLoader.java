@@ -46,6 +46,7 @@ public interface ResourceLoader {
 
 
 	/**
+	 * 该方法的主要实现是在其子类 DefaultResourceLoader 中实现
 	 * Return a Resource handle for the specified resource location.
 	 * <p>The handle should always be a reusable resource descriptor,
 	 * allowing for multiple {@link Resource#getInputStream()} calls.
@@ -67,6 +68,7 @@ public interface ResourceLoader {
 	Resource getResource(String location);
 
 	/**
+	 * 想要获取 ResourceLoader 使用的 ClassLoader 用户来说，可以直接调用该方法来获取
 	 * Expose the ClassLoader used by this ResourceLoader.
 	 * <p>Clients which need to access the ClassLoader directly can do so
 	 * in a uniform manner with the ResourceLoader, rather than relying

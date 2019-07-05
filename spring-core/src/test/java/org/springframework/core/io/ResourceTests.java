@@ -21,12 +21,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -326,6 +328,31 @@ public class ResourceTests {
 	@Test(expected = FileNotFoundException.class)
 	public void testReadableChannelNotFoundOnClassPathResource() throws IOException {
 		new ClassPathResource("Resource.class", getClass()).createRelative("X").readableChannel();
+	}
+
+	@Test
+	public void testCustomDebug() {
+
+		String path = getClass().getResource("Resource.class").getPath();
+//		System.out.println(path);
+		ResourceLoader resourceLoader = new DefaultResourceLoader();
+		FileSystemResourceLoader fileSystemResourceLoader = new FileSystemResourceLoader();
+
+		Resource fileResource1 = resourceLoader.getResource(path.substring(1));
+		Assert.assertFalse(fileResource1 instanceof FileSystemResource);
+
+		Resource fileResourcef = fileSystemResourceLoader.getResource(path.substring(1));
+		Assert.assertTrue(fileResourcef instanceof FileSystemResource);
+
+
+		Resource fileResource2 = resourceLoader.getResource(path.substring(3));
+		Assert.assertTrue(fileResource2 instanceof ClassPathResource);
+
+		Resource urlResource1 = resourceLoader.getResource("file:" + path.substring(3));
+		Assert.assertTrue(urlResource1 instanceof UrlResource);
+
+		Resource urlResource2 = resourceLoader.getResource("http://www.baidu.com");
+		Assert.assertTrue(urlResource2 instanceof  UrlResource);
 	}
 
 }
